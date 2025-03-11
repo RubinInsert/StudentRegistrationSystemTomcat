@@ -13,4 +13,33 @@
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
+
+
+
+
+    <dependencies>
+    
+
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jasper</artifactId>
+            <version>11.0.4</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>11.0.4</version>
+        </dependency>
+
+    
+
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.1.0</version>
+        </dependency>
+
+    </dependencies>
 </project>
