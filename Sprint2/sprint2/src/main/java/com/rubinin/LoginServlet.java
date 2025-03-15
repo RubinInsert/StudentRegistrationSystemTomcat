@@ -35,12 +35,17 @@ public class LoginServlet extends HttpServlet {
             //req.setAttribute("semesterInfo", semesterInfo);
             // Forward to the semester JSP page
             try {
-                req.getRequestDispatcher("/semester.jsp").forward(req, resp);
-            } catch (ServletException | IOException e) {
+                resp.sendRedirect("/semester");
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            out.println("Login failed!");
+            req.setAttribute("loginFailed", true);
+            try {
+                req.getRequestDispatcher("/login.jsp").forward(req, resp);
+            } catch (ServletException | IOException e) {
+                e.printStackTrace();
+            }
         }   
     }
 }

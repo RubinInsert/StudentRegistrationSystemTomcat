@@ -15,5 +15,10 @@
             <input type="submit" value="Login">
         </form>
     </div>
+    <script>
+        <% if (request.getAttribute("loginFailed") != null) { %>
+            alert("Login failed!");
+        <% } %>
+    </script>
 </body>
 </html>

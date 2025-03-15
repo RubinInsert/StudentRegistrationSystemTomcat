@@ -8,22 +8,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-public class SemesterServlet extends HttpServlet {
+public class CourseServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
         HttpSession session = req.getSession(false);
         if (session != null) {
             String username = (String) session.getAttribute("username");
-            req.getRequestDispatcher("/semester.jsp").forward(req, resp);
+            req.getRequestDispatcher("/course.jsp").forward(req, resp);
         } else {
             resp.getWriter().println("No active session found.");
         }
     }
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        req.getSession(false).setAttribute("semester", req.getParameter("semester"));
         try {
-            resp.sendRedirect("/course");
-        } catch (IOException e) {
+            req.getRequestDispatcher("/course.jsp").forward(req, resp);
+        } catch (ServletException | IOException e) {
             e.printStackTrace();
         }
     }
