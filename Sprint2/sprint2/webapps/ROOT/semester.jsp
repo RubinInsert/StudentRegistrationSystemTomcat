@@ -1,7 +1,8 @@
 <%@ page import="com.rubinin.Semester" %>
 <%@ page import="com.rubinin.Course" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
-<jsp:useBean id="semesterInfo" class="com.rubinin.SemesterInfo" scope="session" />
+<jsp:useBean id="semesterService" class="com.rubinin.SemesterService" scope="session" />
 <html>
 <head>
     <title>Login Page</title>
@@ -14,10 +15,10 @@
             <label for="semester">Options:</label>
             <select id="semester" name="semester">
                 <% 
-                    String[] semesterNames = semesterInfo.getAvailableSemesterNames();
-                    for (String semesterName : semesterNames) {
+                    List<Semester> availableSemesters = semesterService.getAllAvailableSemesters();
+                    for (Semester semester : availableSemesters) {
                 %>
-                <option value="<%= semesterName %>"><%= semesterName %></option>
+                <option value="<%= semester.getSemesterID() %>"><%= semester.getPublicName() %></option>
                 <% 
                     }
                 %>

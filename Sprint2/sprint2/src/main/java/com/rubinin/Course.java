@@ -2,47 +2,39 @@ package com.rubinin;
 
 import java.io.Serializable;
 
-public class Course implements Serializable{
-    private String name;
-    private String code;
-    private String assumedKnowledge;
-    private int units;
-    public Course(String name, String code, String assumedKnowledge, int units) {
-        this.name = name;
-        this.code = code;
-        this.assumedKnowledge = assumedKnowledge;
-        this.units = units;
+public class Course implements Serializable {
+    private int semesterID;
+    private String courseID;
+    private int maxCapacity;
+
+    public Course(int semesterID, String courseID, int maxCapacity) {
+        this.semesterID = semesterID;
+        this.courseID = courseID;
+        this.maxCapacity = maxCapacity;
     }
+
     // Getters and setters
-    public String getName() {
-        return name;
+    public int getSemesterID() {
+        return semesterID;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSemesterID(int semesterID) {
+        this.semesterID = semesterID;
     }
 
-    public String getCode() {
-        return code;
+    public String getCourseID() {
+        return courseID;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setCourseID(String courseID) {
+        this.courseID = courseID;
     }
 
-    public String getAssumedKnowledge() {
-        return assumedKnowledge;
+    public int getMaxCapacity() {
+        return maxCapacity;
     }
 
-    public void setAssumedKnowledge(String assumedKnowledge) {
-        this.assumedKnowledge = assumedKnowledge;
-    }
-
-    public int getUnits() {
-        return units;
-    }
-
-    public void setUnits(int units) {
-        this.units = units;
+    public void setMaxCapacity(int maxCapacity) {
+        this.maxCapacity = maxCapacity;
     }
 }

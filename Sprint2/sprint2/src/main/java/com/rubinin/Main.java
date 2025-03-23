@@ -35,10 +35,12 @@ public class Main {
     tomcat.addServlet("", "LoginServlet", new LoginServlet());
     tomcat.addServlet("", "SemesterServlet", new SemesterServlet());
     tomcat.addServlet("", "CourseServlet", new CourseServlet());
+    tomcat.addServlet("", "ConfirmEnrollmentServlet", new ConfirmEnrollmentServlet());
     // Map the servlet
     ctx.addServletMappingDecoded("/login", "LoginServlet");
     ctx.addServletMappingDecoded("/semester", "SemesterServlet");
     ctx.addServletMappingDecoded("/course", "CourseServlet");
+    ctx.addServletMappingDecoded("/confirm", "ConfirmEnrollmentServlet");
     // Start Tomcat
     try {
       tomcat.getConnector();

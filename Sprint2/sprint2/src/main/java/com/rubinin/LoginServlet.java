@@ -22,7 +22,9 @@ public class LoginServlet extends HttpServlet {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (username.equals("admin") && password.equals("admin")) {
+        StudentService studentService = new StudentService();
+        Student validatedStudent = studentService.authenticateStudent(username, password);
+        if (validatedStudent != null) {
             out.println("Login successful!");
             // Store username in the session
             req.getSession().setAttribute("username", username);
