@@ -16,21 +16,22 @@
         <%
             // Fetch the selected semester ID from the session
             int selectedSemesterID = -1;
+            String studentID = (String) session.getAttribute("username");
             List<Course> courses = null;
 
             try {
                 System.out.println("Fetching semester ID from session: " + session.getAttribute("semester"));
                 selectedSemesterID = Integer.parseInt((String) session.getAttribute("semester"));
+
             } catch (NumberFormatException e) {
                 selectedSemesterID = -1; // Default to -1 if parsing fails
             }
 
             // Fetch courses for the selected semester
             if (selectedSemesterID != -1) {
-                courses = courseService.getCoursesBySemesterID(selectedSemesterID);
+                courses = courseService.getAvailableCoursesForStudent(studentID, selectedSemesterID);
             }
         %>
-
         <form id="courseForm" action="/confirm" method="post">
             <label for="courseCode">Course Code:</label>
             <input type="text" id="courseCode" list="courseCodes" oninput="filterCourses()">
@@ -39,8 +40,8 @@
             <datalist id="courseCodes">
                 <% if (courses != null) { %>
                     <% for (Course course : courses) {
-                        if(courseService.isCourseFull(course)) continue; %>
-                        <option id="<%= course.getCourseID()%>" data-value='{"ID":"<%= course.getCourseID() %>", "name":"<%= course.getCourseName() %>", "maxCapacity":<%= course.getMaxCapacity() %>, "units":<%= course.getCredits() %>}' value="<%= course.getCourseID() %>"></option>
+                        if(courseService.isCourseFull(course)) { System.out.println(course.getCourseID()); continue;} %>
+                        <option id="<%= course.getCourseID()%>" data-value='{"ID":"<%= course.getCourseID() %>", "name":"<%= course.getCourseName() %>", "maxCapacity":<%= course.getMaxCapacity() %>, "units":<%= course.getCredits() %>, "incompleteKnowledge":"<%=courseService.hasStudentPassedAssumedKnowledge(studentID, course.getCourseID())%>"}' value="<%= course.getCourseID() %>"></option>
                     <% } %>
                 <% } else { %>
                     <option value="" disabled>No courses available</option>
@@ -87,6 +88,9 @@
             if(chosenCourseUnits + parseInt(course.units) > 40) {
                 alert('You cannot select more than 40 units in total.');
                 return;
+            }
+            if(course.incompleteKnowledge != "null") {
+                alert('WARNING: You have not passed the assumed knowledge for this course. It is recomended that you complete: ' + course.incompleteKnowledge + ' before enrolling in this course.');
             }
             chosenCourseUnits += parseInt(course.units);
 

@@ -176,6 +176,67 @@ public class CourseDAOImpl implements CourseDAO {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return true; // Default to a full course if there's an error
+            return false; // Default to a not full to prevent no listing breaking function
+        }
+        @Override
+        public List<String> getPrerequisites(String courseID) {
+            List<String> prerequisites = new ArrayList<>();
+            String sql = "SELECT preReqKnowledge " +
+                        "FROM PrerequisiteKnowledge " +
+                        "WHERE courseID = ?";
+            try (Connection conn = datasource.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, courseID);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        String preReq = rs.getString("preReqKnowledge");
+                        prerequisites.add(preReq);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return prerequisites;
+        }
+        @Override
+        public List<String> getAssumedKnowledge(String courseID) {
+            List<String> assumedKnowledge = new ArrayList<>();
+            String sql = "SELECT assumedKnowledge " +
+                        "FROM AssumedKnowledge " +
+                        "WHERE courseID = ?";
+            try (Connection conn = datasource.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, courseID);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        String knowledge = rs.getString("assumedKnowledge");
+                        assumedKnowledge.add(knowledge);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return assumedKnowledge;
+        }
+        @Override
+        public boolean hasStudentPassedCourse(String studentID, String courseID) {
+            String sql = "SELECT grade " +
+                         "FROM StudentCourseRegistration " +
+                         "WHERE stdNo = ? AND courseID = ?";
+            try (Connection conn = datasource.getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, studentID);
+                pstmt.setString(2, courseID);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        float grade = rs.getFloat("mark");
+                        // Check if the grade is a passing grade
+                        return grade >= 50.0;
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return false; // Default to false if no record is found or an error occurs
         }
     }

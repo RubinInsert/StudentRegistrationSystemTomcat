@@ -10,5 +10,8 @@ void deleteCourseOffering(int semesterID, String courseID);
 Course getCourseOffering(int semesterID, String courseID);
 List<Course> getAllCourseOfferings();
 List<Course> getCoursesBySemesterID(int semesterID);
+List<String> getPrerequisites(String courseID);
+List<String> getAssumedKnowledge(String courseID);
 boolean isCourseFull(Course course);
+boolean hasStudentPassedCourse(String studentID, String courseID);
 }
