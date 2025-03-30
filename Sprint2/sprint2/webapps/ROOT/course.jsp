@@ -38,7 +38,8 @@
             <!-- Datalist for course codes -->
             <datalist id="courseCodes">
                 <% if (courses != null) { %>
-                    <% for (Course course : courses) { %>
+                    <% for (Course course : courses) {
+                        if(courseService.isCourseFull(course)) continue; %>
                         <option id="<%= course.getCourseID()%>" data-value='{"ID":"<%= course.getCourseID() %>", "name":"<%= course.getCourseName() %>", "maxCapacity":<%= course.getMaxCapacity() %>, "units":<%= course.getCredits() %>}' value="<%= course.getCourseID() %>"></option>
                     <% } %>
                 <% } else { %>

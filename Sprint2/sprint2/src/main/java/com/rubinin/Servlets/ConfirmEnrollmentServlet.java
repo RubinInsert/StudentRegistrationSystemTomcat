@@ -51,6 +51,14 @@ public class ConfirmEnrollmentServlet extends HttpServlet {
         int totalSelectedCourseUnits = 0;
         for (Course course : selectedCourses) {
             totalSelectedCourseUnits += course.getCredits();
+            if(courseService.isCourseFull(course)) {
+                try {
+                    resp.getWriter().println("The course " + course.getCourseID() + " is full. Please select different courses.");
+                    return;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         for(Course course : studentService.getCoursesByStudent(student)) {
             totalSelectedCourseUnits += course.getCredits();

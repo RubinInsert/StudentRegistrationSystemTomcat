@@ -18,4 +18,8 @@ public class CourseService {
         CourseDAO courseDAO = new CourseDAOImpl();
         return courseDAO.getCourseOffering(semesterID, courseID);
     }
+    public boolean isCourseFull(Course course) {
+        CourseDAO courseDAO = new CourseDAOImpl();
+        return courseDAO.isCourseFull(course);
+    }
 }

@@ -10,4 +10,5 @@ void deleteCourseOffering(int semesterID, String courseID);
 Course getCourseOffering(int semesterID, String courseID);
 List<Course> getAllCourseOfferings();
 List<Course> getCoursesBySemesterID(int semesterID);
+boolean isCourseFull(Course course);
 }

@@ -155,4 +155,27 @@ public class CourseDAOImpl implements CourseDAO {
             }
             return courses;
         }
+        @Override
+        public boolean isCourseFull(Course course) {
+            String sql = "SELECT COUNT(*) AS registeredStudents, co.maxCapacity " +
+                        "FROM StudentCourseRegistration scr " +
+                        "JOIN CourseOfferings co ON scr.courseID = co.courseID AND scr.semesterID = co.semesterID " +
+                        "WHERE scr.semesterID = ? AND scr.courseID = ? " +
+                        "GROUP BY co.maxCapacity";
+            try (Connection conn = datasource.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, course.getSemesterID());
+                pstmt.setString(2, course.getCourseID());
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        int registeredStudents = rs.getInt("registeredStudents");
+                        int maxCapacity = rs.getInt("maxCapacity");
+                        return registeredStudents >= maxCapacity;
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return true; // Default to a full course if there's an error
+        }
     }
