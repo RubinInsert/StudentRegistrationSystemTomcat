@@ -6,11 +6,14 @@ public class Course implements Serializable {
     private int semesterID;
     private String courseID;
     private int maxCapacity;
-
-    public Course(int semesterID, String courseID, int maxCapacity) {
+    private String courseName;
+    private int credits;
+    public Course(int semesterID, String courseID, int maxCapacity, String courseName, int credits) {
         this.semesterID = semesterID;
         this.courseID = courseID;
         this.maxCapacity = maxCapacity;
+        this.courseName = courseName;
+        this.credits = credits;
     }
 
     // Getters and setters
@@ -36,5 +39,17 @@ public class Course implements Serializable {
 
     public void setMaxCapacity(int maxCapacity) {
         this.maxCapacity = maxCapacity;
+    }
+    public String getCourseName() {
+        return courseName;
+    }
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+    public int getCredits() {
+        return credits;
+    }
+    public void setCredits(int credits) {
+        this.credits = credits;
     }
 }

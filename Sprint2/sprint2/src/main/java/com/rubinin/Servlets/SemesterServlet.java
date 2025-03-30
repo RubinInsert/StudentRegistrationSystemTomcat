@@ -1,4 +1,4 @@
-package com.rubinin;
+package com.rubinin.Servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 

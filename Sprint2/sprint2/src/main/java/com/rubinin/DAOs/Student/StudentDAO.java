@@ -12,4 +12,5 @@ public interface StudentDAO {
     void updateStudent(Student student);
     void deleteStudent(String stdNo);
     void enrollStudent(Student student, Course course);
+    List<Course> getCoursesByStudent(Student student);
 } 

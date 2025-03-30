@@ -1,5 +1,7 @@
 package com.rubinin;
 
+import java.util.List;
+
 import com.rubinin.DAOs.Student.StudentDAO;
 import com.rubinin.DAOs.Student.StudentDAOImpl;
 
@@ -18,7 +20,8 @@ public class StudentService {
         
         if (s!=null)
         {
-            if (password.equals(s.getPasswordHash())) // Checks if passwords match
+            PasswordSecurity pSec = new PasswordSecurity();
+            if (pSec.verifyPassword(password, s)) // Checks if passwords match
             {
                 return s;
             }
@@ -32,5 +35,20 @@ public class StudentService {
     public Student getStudentByStdNo(String stdNo)
     {
         return studentDAO.getStudentByStdNo(stdNo);
+    }
+    public void addStudent(String stdNo, String givenNames, String lastName, String password)
+    {
+        // Generate salt and password hash
+        PasswordSecurity pSec = new PasswordSecurity();
+        Double salt = pSec.generateSalt();
+        String passwordHash = pSec.hashPassword(password, salt);
+
+        // Create student object and add to database
+        Student student  = new Student(stdNo, givenNames, lastName, passwordHash, salt);
+        System.err.println(student);
+        studentDAO.addStudent(student);
+    }
+    public List<Course> getCoursesByStudent(Student student) {
+        return studentDAO.getCoursesByStudent(student);
     }
 }

@@ -1,6 +1,9 @@
-package com.rubinin;
+package com.rubinin.Servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import com.rubinin.Student;
+import com.rubinin.StudentService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
