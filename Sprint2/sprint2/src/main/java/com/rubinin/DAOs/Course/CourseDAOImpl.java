@@ -1,6 +1,7 @@
 package com.rubinin.DAOs.Course;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -98,7 +99,6 @@ public class CourseDAOImpl implements CourseDAO {
                         int maxCapacity = rs.getInt("maxCapacity");
                         String courseName = rs.getString("cName");
                         int credits = rs.getInt("credits");
-                        // Assuming your Course class has been updated to include courseName and credits
                         return new Course(semesterID, courseID, maxCapacity, courseName, credits);
                     }
                 }
@@ -122,7 +122,6 @@ public class CourseDAOImpl implements CourseDAO {
                     int maxCapacity = rs.getInt("maxCapacity");
                     String courseName = rs.getString("cName");
                     int credits = rs.getInt("credits");
-                    // Assuming your Course class has been updated to include courseName and credits
                     courses.add(new Course(semesterID, courseID, maxCapacity, courseName, credits));
                 }
             } catch (SQLException e) {
@@ -146,7 +145,6 @@ public class CourseDAOImpl implements CourseDAO {
                         int maxCapacity = rs.getInt("maxCapacity");
                         String courseName = rs.getString("cName");
                         int credits = rs.getInt("credits");
-                        // Assuming your Course class has been updated to include courseName and credits
                         courses.add(new Course(semesterID, courseID, maxCapacity, courseName, credits));
                     }
                 }
@@ -229,9 +227,9 @@ public class CourseDAOImpl implements CourseDAO {
                 pstmt.setString(2, courseID);
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
-                        float grade = rs.getFloat("mark");
-                        // Check if the grade is a passing grade
-                        return grade >= 50.0;
+                        String grade = rs.getString("grade");
+                        // Check if the grade is "HD", "D", "C", or "P"
+                        return (grade.equals("HD") || grade.equals("D") || grade.equals("C") || grade.equals("P"));
                     }
                 }
             } catch (SQLException e) {

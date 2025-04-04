@@ -29,7 +29,7 @@
 
             // Fetch courses for the selected semester
             if (selectedSemesterID != -1) {
-                courses = courseService.getAvailableCoursesForStudent(studentID, selectedSemesterID);
+                courses = courseService.getAllCoursesInSemester(selectedSemesterID);
             }
         %>
         <form id="courseForm" action="/confirm" method="post">
@@ -39,9 +39,8 @@
             <!-- Datalist for course codes -->
             <datalist id="courseCodes">
                 <% if (courses != null) { %>
-                    <% for (Course course : courses) {
-                        if(courseService.isCourseFull(course)) { System.out.println(course.getCourseID()); continue;} %>
-                        <option id="<%= course.getCourseID()%>" data-value='{"ID":"<%= course.getCourseID() %>", "name":"<%= course.getCourseName() %>", "maxCapacity":<%= course.getMaxCapacity() %>, "units":<%= course.getCredits() %>, "incompleteKnowledge":"<%=courseService.hasStudentPassedAssumedKnowledge(studentID, course.getCourseID())%>"}' value="<%= course.getCourseID() %>"></option>
+                    <% for (Course course : courses) { %>
+                        <option id="<%= course.getCourseID()%>" data-value='{"ID":"<%= course.getCourseID() %>", "name":"<%= course.getCourseName() %>", "maxCapacity":<%= course.getMaxCapacity() %>, "units":<%= course.getCredits() %>, "isFull":<%=courseService.isCourseFull(course)%>, "assumedKnowledge":"<%=courseService.hasStudentPassedAssumedKnowledge(studentID, course.getCourseID())%>", "preKnowledge":"<%=courseService.hasStudentPassedPreReqKnowledge(studentID, course.getCourseID())%>"}' value="<%= course.getCourseID() %>"></option>
                     <% } %>
                 <% } else { %>
                     <option value="" disabled>No courses available</option>
@@ -57,6 +56,7 @@
                     <th>Course Name</th>
                     <th>Max Capacity</th>
                     <th>Units</th>
+                    <th> Remove </th>
                 </tr>
             </table>
 
@@ -89,16 +89,23 @@
                 alert('You cannot select more than 40 units in total.');
                 return;
             }
-            if(course.incompleteKnowledge != "null") {
-                alert('WARNING: You have not passed the assumed knowledge for this course. It is recomended that you complete: ' + course.incompleteKnowledge + ' before enrolling in this course.');
+            if(course.isFull) {
+                alert('Course is full. Please select another course.');
+                return;
+            }
+            if(course.preKnowledge != "null") {
+                alert('WARNING: You have not passed the pre-req knowledge for this course. You must first complete: ' + course.preKnowledge + ' before enrolling in this course.');
+                return;
+            } else if(course.assumedKnowledge != "null") {
+                alert('WARNING: You have not passed the assumed knowledge for this course. It is recomended that you complete: ' + course.assumedKnowledge + ' before enrolling in this course.');
             }
             chosenCourseUnits += parseInt(course.units);
 
             var selectedCourses = document.getElementById('selectedCourses').value;
             var selectedCoursesArray = selectedCourses ? selectedCourses.split(',') : [];
             selectedCoursesArray.push(course.ID);
-            document.getElementById('selectedCourses').value = selectedCoursesArray.join(',');
-
+            document.getElementById('selectedCourses').value = selectedCoursesArray.join(','); // Add to hidden element
+            document.getElementById('courseCode').value = ''; // Clear input field
 
 
             var table = document.getElementById('courseTable');
@@ -107,9 +114,22 @@
             row.insertCell(1).innerHTML = course.name;
             row.insertCell(2).innerHTML = course.maxCapacity;
             row.insertCell(3).innerHTML = course.units;
+            var removeButtonLocation = row.insertCell(4);
+            var removeButton = document.createElement('button');
+            removeButton.innerHTML = 'Remove';
+            removeButtonLocation.appendChild(removeButton);
 
+            removeButton.onclick = function() {
+                table.deleteRow(row.rowIndex);
+                chosenCourseUnits -= course.units; // Subtract the units of the removed course
 
-        } else {
+    // Remove the course from the hidden input field
+    var selectedCourses = document.getElementById('selectedCourses').value;
+    var selectedCoursesArray = selectedCourses.length > 0 ? selectedCourses.split(',') : []; // Make string into array, or an empty array
+    selectedCoursesArray = selectedCoursesArray.filter(id => id !== course.ID); // Remove the element in array which matches the course ID
+    document.getElementById('selectedCourses').value = selectedCoursesArray.join(','); // Put new array back into place.
+            }
+            } else {
             alert('Course not found');
         }
     }

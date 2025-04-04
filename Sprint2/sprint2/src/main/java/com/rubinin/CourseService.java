@@ -6,11 +6,11 @@ import com.rubinin.DAOs.Course.CourseDAOImpl;
 import com.rubinin.Course;
 
 public class CourseService {
-    public List<Course> getAllCourses() {
+    public List<Course> getAllCoursesInSemester(int semesterID) {
         CourseDAO courseDAO = new CourseDAOImpl();
-        return courseDAO.getAllCourseOfferings();
+        return courseDAO.getCoursesBySemesterID(semesterID);
     }
-    public List<Course> getAvailableCoursesForStudent(String studentID, int semesterID) {
+    public List<Course> getAvailableCoursesForStudent(String studentID, int semesterID) { // This function is no longer used.
         CourseDAO courseDAO = new CourseDAOImpl();
         List<Course> allCoursesSemester = getCoursesBySemesterID(semesterID);;
         for (Course course : allCoursesSemester) {
@@ -29,12 +29,28 @@ public class CourseService {
     public String hasStudentPassedAssumedKnowledge(String studentID, String courseID) { // Returns course which has not been passed or null.
         CourseDAO courseDAO = new CourseDAOImpl();
         List<String> assumedKnowledge = courseDAO.getAssumedKnowledge(courseID);
+        String coursesNotPassed = "";
         if (assumedKnowledge != null && !assumedKnowledge.isEmpty()) {
             for (String assumedCourse : assumedKnowledge) {
                 if (!courseDAO.hasStudentPassedCourse(studentID, assumedCourse)) {
-                    return assumedCourse;
+                    coursesNotPassed += assumedCourse + ", ";
                 }
             }
+            return coursesNotPassed.length() > 0 ? coursesNotPassed : null;
+        }
+        return null;
+    }
+    public String hasStudentPassedPreReqKnowledge(String studentID, String courseID) { // Returns course which has not been passed or null.
+        CourseDAO courseDAO = new CourseDAOImpl();
+        List<String> preKnowledge = courseDAO.getPrerequisites(courseID);
+        String coursesNotPassed = "";
+        if (preKnowledge != null && !preKnowledge.isEmpty()) {
+            for (String assumedCourse : preKnowledge) {
+                if (!courseDAO.hasStudentPassedCourse(studentID, assumedCourse)) {
+                    coursesNotPassed += assumedCourse + ", ";
+                }
+            }
+            return coursesNotPassed.length() > 0 ? coursesNotPassed : null;
         }
         return null;
     }
