@@ -1,1 +1,2 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/aG82F8hT)
+# Student Registration System
+A Tomcat Java Webapp which communicates with a SQL server to serve class and semester information, and provide a means for registering to a semester with specific class codes.
